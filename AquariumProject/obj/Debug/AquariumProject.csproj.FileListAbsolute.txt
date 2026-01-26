@@ -1,0 +1,10 @@
+C:\Users\TsarIvan\source\repos\AquariumProject\AquariumProject\bin\Debug\AquariumProject.exe.config
+C:\Users\TsarIvan\source\repos\AquariumProject\AquariumProject\bin\Debug\AquariumProject.exe
+C:\Users\TsarIvan\source\repos\AquariumProject\AquariumProject\bin\Debug\AquariumProject.pdb
+C:\Users\TsarIvan\source\repos\AquariumProject\AquariumProject\obj\Debug\AquariumProject.csproj.AssemblyReference.cache
+C:\Users\TsarIvan\source\repos\AquariumProject\AquariumProject\obj\Debug\AquariumProject.Form1.resources
+C:\Users\TsarIvan\source\repos\AquariumProject\AquariumProject\obj\Debug\AquariumProject.Properties.Resources.resources
+C:\Users\TsarIvan\source\repos\AquariumProject\AquariumProject\obj\Debug\AquariumProject.csproj.GenerateResource.cache
+C:\Users\TsarIvan\source\repos\AquariumProject\AquariumProject\obj\Debug\AquariumProject.csproj.CoreCompileInputs.cache
+C:\Users\TsarIvan\source\repos\AquariumProject\AquariumProject\obj\Debug\AquariumProject.exe
+C:\Users\TsarIvan\source\repos\AquariumProject\AquariumProject\obj\Debug\AquariumProject.pdb
