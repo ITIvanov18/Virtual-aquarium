@@ -64,5 +64,48 @@ namespace AquariumProject
                 }
             }
         }
+
+        private void добавиРибкаToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Random rnd = new Random();
+            int randomType = rnd.Next(1, 9);
+            int randomSizeW = rnd.Next(60, 120);
+            int randomSizeH = (int)(randomSizeW * 0.7);
+
+            Fish newFish = new Fish(
+                0,
+                rnd.Next(0, this.Height - 150),
+                rnd.Next(5, 20),
+                randomType
+            );
+
+            newFish.Width = randomSizeW;
+            newFish.Height = randomSizeH;
+
+            aquariumFish.Add(newFish);
+        }
+
+        private void запишиToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(List<Fish>));
+            using (TextWriter writer = new StreamWriter("aquarium.xml"))
+            {
+                serializer.Serialize(writer, aquariumFish);
+            }
+            MessageBox.Show("Аквариумът е запазен!");
+        }
+
+        private void заредиToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (File.Exists("aquarium.xml"))
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof(List<Fish>));
+                using (FileStream fs = new FileStream("aquarium.xml", FileMode.Open))
+                {
+                    aquariumFish = (List<Fish>)serializer.Deserialize(fs);
+                }
+                Invalidate();
+            }
+        }
     }
 }

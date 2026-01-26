@@ -33,6 +33,9 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.рибиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.добавиРибкаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.файлToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.запишиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.заредиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -47,6 +50,7 @@
             this.menuStrip1.GripMargin = new System.Windows.Forms.Padding(2, 2, 0, 2);
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.файлToolStripMenuItem,
             this.рибиToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -68,6 +72,29 @@
             this.добавиРибкаToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
             this.добавиРибкаToolStripMenuItem.Text = "Добави рибка";
             this.добавиРибкаToolStripMenuItem.Click += new System.EventHandler(this.добавиРибкаToolStripMenuItem_Click);
+            // 
+            // файлToolStripMenuItem
+            // 
+            this.файлToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.запишиToolStripMenuItem,
+            this.заредиToolStripMenuItem});
+            this.файлToolStripMenuItem.Name = "файлToolStripMenuItem";
+            this.файлToolStripMenuItem.Size = new System.Drawing.Size(69, 29);
+            this.файлToolStripMenuItem.Text = "Файл";
+            // 
+            // запишиToolStripMenuItem
+            // 
+            this.запишиToolStripMenuItem.Name = "запишиToolStripMenuItem";
+            this.запишиToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
+            this.запишиToolStripMenuItem.Text = "Запиши";
+            this.запишиToolStripMenuItem.Click += new System.EventHandler(this.запишиToolStripMenuItem_Click);
+            // 
+            // заредиToolStripMenuItem
+            // 
+            this.заредиToolStripMenuItem.Name = "заредиToolStripMenuItem";
+            this.заредиToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
+            this.заредиToolStripMenuItem.Text = "Зареди от файл";
+            this.заредиToolStripMenuItem.Click += new System.EventHandler(this.заредиToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -91,6 +118,9 @@
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem рибиToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem добавиРибкаToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem файлToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem запишиToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem заредиToolStripMenuItem;
     }
 }
 
