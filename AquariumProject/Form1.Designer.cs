@@ -98,7 +98,7 @@
             this.добавиРибкаToolStripMenuItem.Name = "добавиРибкаToolStripMenuItem";
             this.добавиРибкаToolStripMenuItem.Size = new System.Drawing.Size(230, 34);
             this.добавиРибкаToolStripMenuItem.Text = "Добави рибка";
-            this.добавиРибкаToolStripMenuItem.Click += new System.EventHandler(this.добавиРибкаToolStripMenuItem_Click);
+
             // 
             // езикToolStripMenuItem
             // 

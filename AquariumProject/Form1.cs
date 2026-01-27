@@ -37,12 +37,14 @@ namespace AquariumProject
             // включва DoubleBuffered за по-гладка анимация без трептене (flickering)
             this.DoubleBuffered = true;
 
-            this.Width = 1080;
-            this.Height = 640;
+            this.Width = 1188;
+            this.Height = 660;
 
             // зарежда на ресурсите (фон и риби)
             LoadBackground();
             AssetManager.LoadResources();
+
+            InitializeFishMenu();
         }
 
         // зарежда фоновото изображение MemoryStream, за да избегне GDI+ грешки
@@ -100,7 +102,10 @@ namespace AquariumProject
             }
 
             // рисуване на текста
-            string infoText = $"FPS: {fps:F0} | Риби: {aquariumFish.Count}";
+            string infoText = (currentLang == "BG")
+                ? $"FPS: {fps:F0} | Риби: {aquariumFish.Count}"
+                : $"FPS: {fps:F0} | Fish: {aquariumFish.Count}";
+
             e.Graphics.DrawString(infoText, infoFont, Brushes.Black, 12, 32); // сянка
             e.Graphics.DrawString(infoText, infoFont, Brushes.White, 10, 30); // текст
         }
@@ -119,6 +124,12 @@ namespace AquariumProject
 
                 this.рибиToolStripMenuItem.Text = "Риби";
                 this.добавиРибкаToolStripMenuItem.Text = "Добави рибка";
+                this.добавиРибкаToolStripMenuItem.DropDownItems[0].Text = "🎲 Случайна";
+                string[] bgNames = { "Рибка 1", "Рибка 2", "Рибка 3", "Рибка 4", "Риба балон", "Морско конче", "Акула", "Риба меч" };
+                for (int i = 0; i < 8; i++)
+                {
+                    this.добавиРибкаToolStripMenuItem.DropDownItems[i + 2].Text = bgNames[i];
+                }
 
                 this.езикToolStripMenuItem.Text = "Език";
             }
@@ -133,6 +144,13 @@ namespace AquariumProject
 
                 this.рибиToolStripMenuItem.Text = "Fish";
                 this.добавиРибкаToolStripMenuItem.Text = "Add Fish";
+                this.добавиРибкаToolStripMenuItem.DropDownItems[0].Text = "🎲 Random Fish";
+                string[] enNames = { "Fish 1", "Fish 2", "Fish 3", "Fish 4", "Pufferfish", "Seahorse", "Shark", "Swordfish" };
+                for (int i = 0; i < 8; i++)
+                {
+                    this.добавиРибкаToolStripMenuItem.DropDownItems[i + 2].Text = enNames[i];
+                }
+
 
                 this.езикToolStripMenuItem.Text = "Language";
             }
@@ -141,33 +159,65 @@ namespace AquariumProject
             Invalidate();
         }
 
-        // обработчик на събитието за добавяне на нова риба от менюто
-        private void добавиРибкаToolStripMenuItem_Click(object sender, EventArgs e)
+        private void InitializeFishMenu()
+        {
+            // изчиства старите неща
+            this.добавиРибкаToolStripMenuItem.DropDownItems.Clear();
+
+            // Опция за random риба
+            var itemRandom = new ToolStripMenuItem("🎲 Случайна (Random)");
+            itemRandom.Click += (s, e) => SpawnFish(0); // Викаме с 0 за Random
+            this.добавиРибкаToolStripMenuItem.DropDownItems.Add(itemRandom);
+
+            // разделителна линия
+            this.добавиРибкаToolStripMenuItem.DropDownItems.Add(new ToolStripSeparator());
+
+            // опции за всяка риба поотделно
+            // списък с имената на рибите
+            string[] fishNames = { "Рибка 1", "Рибка 2", "Рибка 3", "Рибка 4", "Риба балон", "Морско конче", "Акула", "Риба меч" };
+
+            for (int i = 0; i < 8; i++)
+            {
+                int typeId = i + 1; // типовете са от 1 до 8
+                var item = new ToolStripMenuItem(fishNames[i]);
+
+                // когато се кликне, се пуска конкретния тип
+                item.Click += (s, e) => SpawnFish(typeId);
+
+                // малка иконка на самото меню
+                item.Image = AssetManager.GetFishImage(typeId, true);
+
+                this.добавиРибкаToolStripMenuItem.DropDownItems.Add(item);
+            }
+        }
+
+        // универсален метод за създаване на риба
+        private void SpawnFish(int type)
         {
             Random rnd = new Random();
-            int randomType = rnd.Next(1, 9);   // генерира тип от 1 до 8
 
-            // --- умна логика за размера ---
-            // взима картинката от кеша, за да използва реалните ѝ пропорции
-            Image baseImage = AssetManager.GetFishImage(randomType, true);
+            // ако е първата опция, избира на случаен принцип
+            int fishType = (type == 0) ? rnd.Next(1, 9) : type;
+
+            // взима картинка от мениджъра за пропорциите
+            Image baseImage = AssetManager.GetFishImage(fishType, true);
             double ratio = (double)baseImage.Height / baseImage.Width;
 
-            // определя ширината на случаен принцип (хищниците са по-големи)
+            // логика за размера (хищниците са по-големи)
             int randomWidth;
-            if (randomType == 7 || randomType == 8) 
+            if (fishType == 7 || fishType == 8) // акула или риба меч
                 randomWidth = rnd.Next(220, 350);
-            else 
+            else
                 randomWidth = rnd.Next(80, 140);
 
-            // височината се изчислява автоматично спрямо пропорцията
             int randomHeight = (int)(randomWidth * ratio);
 
             Fish newFish = new Fish(
-                0, 
-                rnd.Next(0, this.Height - 150), 
-                rnd.Next(5, 15),  // скорост
-                randomType        // тип риба
-                );
+                0,                              // start X
+                rnd.Next(10, this.Height - 150), // start Y
+                rnd.Next(5, 15),                // скорост
+                fishType                        // тип
+            );
 
             newFish.Width = randomWidth;
             newFish.Height = randomHeight;

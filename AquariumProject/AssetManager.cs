@@ -61,7 +61,7 @@ namespace AquariumProject
             isLoaded = true;
         }
 
-        // помошен метод за безопасно взимане на картинка според типа и посоката
+        // помощен метод за безопасно взимане на картинка според типа и посоката
         public static Image GetFishImage(int type, bool movingRight)
         {
             if (!isLoaded) LoadResources();
