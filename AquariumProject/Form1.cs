@@ -17,11 +17,13 @@ namespace AquariumProject
 
             this.DoubleBuffered = true;
 
+            this.Width = 1080;
+            this.Height = 640;
+
             // взима байтовете на картинката
             byte[] imageBytes = (byte[])Properties.Resources.aquarium;
 
-            // създава поток, но НЕ слагаме 'using', за да не го затворим!
-            // този поток трябва да живее, докато приложението работи
+            // създава поток, който трябва да живее, докато приложението работи
             MemoryStream ms = new MemoryStream(imageBytes);
 
             this.BackgroundImage = Image.FromStream(ms);
@@ -68,14 +70,31 @@ namespace AquariumProject
         private void добавиРибкаToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Random rnd = new Random();
-            int randomType = rnd.Next(1, 9);
-            int randomSizeW = rnd.Next(60, 120);
-            int randomSizeH = (int)(randomSizeW * 0.7);
 
+            // генерира тип от 1 до 9 (1-8)
+            int randomType = rnd.Next(1, 9);
+
+            // --- умна логика за размера ---
+            int randomSizeW;
+
+            // проверяваме дали е акула (7) или риба меч (8)
+            if (randomType == 7 || randomType == 8)
+            {
+                // големите риби: между 200 и 300 пиксела
+                randomSizeW = rnd.Next(200, 301);
+            }
+            else
+            {
+                // малките риби: между 60 и 100 пиксела
+                randomSizeW = rnd.Next(60, 101);
+            }
+            int randomSizeH = (int)(randomSizeW * 0.6);
+
+            // създава новата риба
             Fish newFish = new Fish(
                 0,
                 rnd.Next(0, this.Height - 150),
-                rnd.Next(5, 20),
+                rnd.Next(5, 15),
                 randomType
             );
 
@@ -87,24 +106,54 @@ namespace AquariumProject
 
         private void запишиToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            XmlSerializer serializer = new XmlSerializer(typeof(List<Fish>));
-            using (TextWriter writer = new StreamWriter("aquarium.xml"))
+            // прозорец за запис
+            SaveFileDialog saveDialog = new SaveFileDialog();
+            saveDialog.Filter = "Aquarium Files (*.xml)|*.xml"; // филтър само за XML
+            saveDialog.Title = "Запази състоянието на аквариума";
+            saveDialog.FileName = "MyAquarium.xml"; // име по подразбиране
+
+            // показва прозореца и чака потребителят да цъкне "Save"
+            if (saveDialog.ShowDialog() == DialogResult.OK)
             {
-                serializer.Serialize(writer, aquariumFish);
+                // използва името, което потребителят е избрал (saveDialog.FileName)
+                XmlSerializer serializer = new XmlSerializer(typeof(List<Fish>));
+
+                using (TextWriter writer = new StreamWriter(saveDialog.FileName))
+                {
+                    serializer.Serialize(writer, aquariumFish);
+                }
+
+                MessageBox.Show("Успешно запазване!", "Информация");
             }
-            MessageBox.Show("Аквариумът е запазен!");
         }
 
         private void заредиToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (File.Exists("aquarium.xml"))
+            // създава прозорец за отваряне
+            OpenFileDialog openDialog = new OpenFileDialog();
+            openDialog.Filter = "Aquarium Files (*.xml)|*.xml";
+            openDialog.Title = "Избери аквариум за зареждане";
+
+            // ако потребителят избере файл и цъкне "Open"
+            if (openDialog.ShowDialog() == DialogResult.OK)
             {
-                XmlSerializer serializer = new XmlSerializer(typeof(List<Fish>));
-                using (FileStream fs = new FileStream("aquarium.xml", FileMode.Open))
+                try
                 {
-                    aquariumFish = (List<Fish>)serializer.Deserialize(fs);
+                    XmlSerializer serializer = new XmlSerializer(typeof(List<Fish>));
+
+                    using (FileStream fs = new FileStream(openDialog.FileName, FileMode.Open))
+                    {
+                        aquariumFish = (List<Fish>)serializer.Deserialize(fs);
+                    }
+
+                    // прерисува веднага, за да се видят новите риби
+                    Invalidate();
+                    MessageBox.Show("Аквариумът е зареден успешно!");
                 }
-                Invalidate();
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Грешка при зареждане: " + ex.Message);
+                }
             }
         }
     }
