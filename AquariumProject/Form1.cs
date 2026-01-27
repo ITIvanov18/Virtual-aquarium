@@ -26,6 +26,8 @@ namespace AquariumProject
         private DateTime lastFpsTime = DateTime.Now;
         private Font infoFont = new Font("Consolas", 12, FontStyle.Bold); // шрифт за брояча
 
+        private string currentLang = "BG"; // помни кой език е избран в момента
+
         // Конструктор на формата. Инициализира компонентите, включва
         // двойното буфериране и стартира процеса по зареждане на ресурсите
         public Form1()
@@ -68,7 +70,7 @@ namespace AquariumProject
             Invalidate();
         }
 
-        /// Метод за изчертаване на графиката. Използва кеширани изображения за максимална производителност
+        // Метод за изчертаване на графиката. Използва кеширани изображения за максимална производителност
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
@@ -103,8 +105,43 @@ namespace AquariumProject
             e.Graphics.DrawString(infoText, infoFont, Brushes.White, 10, 30); // текст
         }
 
+        private void ChangeLanguage(string lang)
+        {
+            currentLang = lang;
+            if (lang == "BG")
+            {
+                this.Text = "Виртуален Аквариум";
 
-        /// обработчик на събитието за добавяне на нова риба от менюто
+                // превод на менютата
+                this.файлToolStripMenuItem.Text = "Файл";
+                this.запишиToolStripMenuItem.Text = "Запиши";
+                this.заредиToolStripMenuItem.Text = "Зареди от файл";
+
+                this.рибиToolStripMenuItem.Text = "Риби";
+                this.добавиРибкаToolStripMenuItem.Text = "Добави рибка";
+
+                this.езикToolStripMenuItem.Text = "Език";
+            }
+            else
+            {
+                this.Text = "Virtual Aquarium";
+
+                // translation of menus
+                this.файлToolStripMenuItem.Text = "File";
+                this.запишиToolStripMenuItem.Text = "Save";
+                this.заредиToolStripMenuItem.Text = "Load from file";
+
+                this.рибиToolStripMenuItem.Text = "Fish";
+                this.добавиРибкаToolStripMenuItem.Text = "Add Fish";
+
+                this.езикToolStripMenuItem.Text = "Language";
+            }
+              
+            // обновява екрана, за да се смени текстът на FPS брояча
+            Invalidate();
+        }
+
+        // обработчик на събитието за добавяне на нова риба от менюто
         private void добавиРибкаToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Random rnd = new Random();
@@ -185,6 +222,16 @@ namespace AquariumProject
                     MessageBox.Show("Грешка при зареждане: " + ex.Message);
                 }
             }
+        }
+
+        private void английскиToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ChangeLanguage("EN");
+        }
+
+        private void българскиToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ChangeLanguage("BG");
         }
     }
 }
