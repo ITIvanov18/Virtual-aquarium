@@ -4,11 +4,11 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml.Serialization;
-using static System.Windows.Forms.AxHost;
 
 /*
  * Име: Иван Тенев Иванов
  * Фак. No: F115436
+ * Клас: Form1
  * Описание: Основната форма на приложението. Управлява логиката на визуализацията, 
  * рендерирането на графиката и взаимодействието с потребителя
  */
@@ -19,12 +19,6 @@ namespace AquariumProject
     {
         // списък, съхраняващ всички инстанции на риби в аквариума
         List<Fish> aquariumFish = new List<Fish>();
-
-        // ОПТИМИЗАЦИЯ (Image Caching)
-        // ползвам dictionaries за кеширане на изображенията
-        // това предотвратява тежките операции(resize/rotate) във всеки кадър
-        private Dictionary<int, Image> cachedFishRight = new Dictionary<int, Image>();
-        private Dictionary<int, Image> cachedFishLeft = new Dictionary<int, Image>();
 
         // променливи за изчисляване на FPS
         private int frames = 0;
@@ -46,7 +40,7 @@ namespace AquariumProject
 
             // зарежда на ресурсите (фон и риби)
             LoadBackground();
-            PreloadFishImages();
+            AssetManager.LoadResources();
         }
 
         // зарежда фоновото изображение MemoryStream, за да избегне GDI+ грешки
@@ -60,41 +54,6 @@ namespace AquariumProject
 
             this.BackgroundImage = Image.FromStream(ms);
             this.BackgroundImageLayout = ImageLayout.Stretch;
-        }
-
-
-
-        // ОПТИМИЗАЦИЯ: Обхожда всички видове риби, изчислява техните пропорции,
-        // преоразмерява ги и ги запазва в кеша (за ляво и дясно движение)
-        private void PreloadFishImages()
-        {
-            for (int i = 1; i <= 8; i++)
-            {
-                byte[] rawBytes = GetBytesByType(i);
-
-                using (MemoryStream ms = new MemoryStream(rawBytes))
-                {
-                    using (Image original = Image.FromStream(ms))
-                    {
-                        // изчислява на оригиналното съотношение (Aspect Ratio)
-                        double ratio = (double)original.Height / original.Width;
-
-                        // смалява базовия размер до 350px ширина за оптимизация,
-                        // НО височината се смята автоматично според пропорцията
-                        int newWidth = 350;
-                        int newHeight = (int)(newWidth * ratio);
-
-                        // създава на оптимизирано копие (гледащо надясно)
-                        Image resizedImg = ResizeImage(original, newWidth, newHeight);
-                        cachedFishRight.Add(i, resizedImg);
-
-                        // създава на огледално копие (гледащо наляво)
-                        Image flippedImg = (Image)resizedImg.Clone();
-                        flippedImg.RotateFlip(RotateFlipType.RotateNoneFlipX);
-                        cachedFishLeft.Add(i, flippedImg);
-                    }
-                }
-            }
         }
 
         // таймер, който се изпълнява на всеки интервал (tick) и обновява 
@@ -114,16 +73,18 @@ namespace AquariumProject
         {
             base.OnPaint(e);
 
-            // рисуване на рибите
+            // взима готовата картинка от мениджъра
             foreach (var fish in aquariumFish)
             {
-                Image imgToDraw;
-                if (fish.SpeedX > 0) 
-                    imgToDraw = cachedFishRight[fish.FishType];
-                else 
-                    imgToDraw = cachedFishLeft[fish.FishType];
+                // ПОДОБРЕНИЕ: Взимаме готовата картинка от мениджъра
+                // Form1 вече не се грижи за dictionaries и logic!
+                bool isRight = fish.SpeedX > 0;
+                Image imgToDraw = AssetManager.GetFishImage(fish.FishType, isRight);
 
-                e.Graphics.DrawImage(imgToDraw, fish.X, fish.Y, fish.Width, fish.Height);
+                if (imgToDraw != null)
+                {
+                    e.Graphics.DrawImage(imgToDraw, fish.X, fish.Y, fish.Width, fish.Height);
+                }
             }
 
             // изчисляване и визуализация на FPS 
@@ -142,45 +103,16 @@ namespace AquariumProject
             e.Graphics.DrawString(infoText, infoFont, Brushes.White, 10, 30); // текст
         }
 
-        // помощен метод за висококачествено оразмеряване (без пикселизация)
-        private Image ResizeImage(Image imgToResize, int width, int height)
-        {
-            Bitmap b = new Bitmap(width, height);
-            using (Graphics g = Graphics.FromImage(b))
-            {
-                g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-                g.DrawImage(imgToResize, 0, 0, width, height);
-            }
-            return b;
-        }
-
-        // помощен метод, който връща ресурсните данни (byte array) според избрания тип риба
-        private byte[] GetBytesByType(int type)
-        {
-            switch (type)
-            {
-                case 1: return Properties.Resources.fish1;
-                case 2: return Properties.Resources.fish2;
-                case 3: return Properties.Resources.fish3;
-                case 4: return Properties.Resources.fish4;
-                case 5: return Properties.Resources.pufferfish;
-                case 6: return Properties.Resources.seahorse;
-                case 7: return Properties.Resources.shark;
-                case 8: return Properties.Resources.swordfish;
-                default: return Properties.Resources.fish1;
-            }
-        }
 
         /// обработчик на събитието за добавяне на нова риба от менюто
         private void добавиРибкаToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Random rnd = new Random();
-
             int randomType = rnd.Next(1, 9);   // генерира тип от 1 до 8
 
             // --- умна логика за размера ---
             // взима картинката от кеша, за да използва реалните ѝ пропорции
-            Image baseImage = cachedFishRight[randomType];
+            Image baseImage = AssetManager.GetFishImage(randomType, true);
             double ratio = (double)baseImage.Height / baseImage.Width;
 
             // определя ширината на случаен принцип (хищниците са по-големи)
@@ -199,6 +131,7 @@ namespace AquariumProject
                 rnd.Next(5, 15),  // скорост
                 randomType        // тип риба
                 );
+
             newFish.Width = randomWidth;
             newFish.Height = randomHeight;
 
