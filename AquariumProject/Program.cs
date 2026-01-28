@@ -6,11 +6,14 @@ using System.Windows.Forms;
 
 namespace AquariumProject
 {
+    /*
+    * Име: Иван Тенев Иванов
+    * Фак. No: F115436 
+    * Клас: Program
+    */
+
     internal static class Program
     {
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
         [STAThread]
         static void Main()
         {

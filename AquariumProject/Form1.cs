@@ -19,6 +19,7 @@ namespace AquariumProject
     {
         // списък, съхраняващ всички инстанции на риби в аквариума
         List<Fish> aquariumFish = new List<Fish>();
+        private List<Bubble> bubbles = new List<Bubble>();
 
         // променливи за изчисляване на FPS
         private int frames = 0;
@@ -45,6 +46,12 @@ namespace AquariumProject
             AssetManager.LoadResources();
 
             InitializeFishMenu();
+
+            // създава балончета
+            for (int i = 0; i < 50; i++)
+            {
+                bubbles.Add(new Bubble(this.Width, this.Height));
+            }
         }
 
         // зарежда фоновото изображение MemoryStream, за да избегне GDI+ грешки
@@ -64,10 +71,18 @@ namespace AquariumProject
         // логическите координати на всички обекти
         private void timer1_Tick_1(object sender, EventArgs e)
         {
+            // движение на рибите
             foreach (var fish in aquariumFish)
             {
                 fish.Move(this.ClientSize.Width);
             }
+
+            // движение на балончетата
+            foreach (var bubble in bubbles)
+            {
+                bubble.Move(this.ClientSize.Height, this.ClientSize.Width);
+            }
+
             // предизвиква прерисуване на формата (извиква OnPaint)
             Invalidate();
         }
@@ -77,11 +92,17 @@ namespace AquariumProject
         {
             base.OnPaint(e);
 
+            // включвам AntiAlias за гладки кръгчета
+            e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+
+            foreach (var bubble in bubbles)
+            {
+                bubble.Draw(e.Graphics);
+            }
+
             // взима готовата картинка от мениджъра
             foreach (var fish in aquariumFish)
             {
-                // ПОДОБРЕНИЕ: Взимаме готовата картинка от мениджъра
-                // Form1 вече не се грижи за dictionaries и logic!
                 bool isRight = fish.SpeedX > 0;
                 Image imgToDraw = AssetManager.GetFishImage(fish.FishType, isRight);
 
