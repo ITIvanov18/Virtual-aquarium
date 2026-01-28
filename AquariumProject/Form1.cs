@@ -164,9 +164,9 @@ namespace AquariumProject
             // изчиства старите неща
             this.добавиРибкаToolStripMenuItem.DropDownItems.Clear();
 
-            // Опция за random риба
+            // опция за random риба
             var itemRandom = new ToolStripMenuItem("🎲 Случайна (Random)");
-            itemRandom.Click += (s, e) => SpawnFish(0); // Викаме с 0 за Random
+            itemRandom.Click += (s, e) => SpawnFish(0);
             this.добавиРибкаToolStripMenuItem.DropDownItems.Add(itemRandom);
 
             // разделителна линия
@@ -211,7 +211,9 @@ namespace AquariumProject
                 randomWidth = rnd.Next(80, 140);
 
             int randomHeight = (int)(randomWidth * ratio);
+            int maxY = this.ClientSize.Height - randomHeight - 50;
 
+            if (maxY < 0) maxY = 0;
             Fish newFish = new Fish(
                 0,                              // start X
                 rnd.Next(10, this.Height - 150), // start Y
