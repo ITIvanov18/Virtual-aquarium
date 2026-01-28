@@ -10,7 +10,7 @@
 ## 📖 Project Overview
 **Virtual Aquarium** is an interactive desktop application that simulates a living aquatic ecosystem. The project is designed to demonstrate advanced concepts of **Object-Oriented Programming (OOP)**, **GDI+ Graphics rendering**, **Data Serialization**, and **Application Architecture** within the .NET environment.
 
-The application allows users to populate an aquarium with various marine species, track their movement statistics, save the simulation state and switch interface languages dynamically.
+The application allows users to populate an aquarium with various marine species, track their movement statistics, <br>save the simulation state and switch interface languages dynamically.
 
 ---
 </div>
@@ -35,6 +35,13 @@ The application allows users to populate an aquarium with various marine species
 * **High-Performance Rendering:** Runs at a stable framerate using **Double Buffering** to eliminate screen flickering.
 * **Asset Manager & Caching:** Implements a dedicated `AssetManager` class. Images are pre-loaded, resized, <br>and cached (including mirrored versions) at startup to minimize runtime memory allocation and CPU usage.
 <br>
+
+---
+
+## 📹 Video Demonstration
+
+A walkthrough of the codebase, architecture and functionality is available
+[here](https://drive.google.com/file/d/12w62PSRm0LSzN-1hwdv8a2dhqHGiPyE5/view?usp=sharing)
 
 ---
 
@@ -63,7 +70,6 @@ The project follows strict **Separation of Concerns** to ensure maintainability 
 ### Optimization Strategy
 To handle multiple moving objects smoothly, the application avoids `new Bitmap()` calls inside the render loop.<br> Instead, it uses a Dictionary-based caching system:
 ```csharp
-// Example of the caching strategy used in AssetManager
 private static Dictionary<int, Image> cachedFishRight = new Dictionary<int, Image>();
 private static Dictionary<int, Image> cachedFishLeft = new Dictionary<int, Image>();
 ```

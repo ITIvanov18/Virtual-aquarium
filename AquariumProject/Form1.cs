@@ -123,9 +123,20 @@ namespace AquariumProject
             }
 
             // рисуване на текста
-            string infoText = (currentLang == "BG")
-                ? $"FPS: {fps:F0} | Риби: {aquariumFish.Count}"
-                : $"FPS: {fps:F0} | Fish: {aquariumFish.Count}";
+            string infoText = "";
+
+            if (currentLang == "BG")
+            {
+                infoText = $"FPS: {fps:F0} | Риби: {aquariumFish.Count}";
+            }
+            else if (currentLang == "EN")
+            {
+                infoText = $"FPS: {fps:F0} | Fish: {aquariumFish.Count}";
+            }
+            else // (currentLang == "ES")
+            {
+                infoText = $"FPS: {fps:F0} | Peces: {aquariumFish.Count}";
+            }
 
             e.Graphics.DrawString(infoText, infoFont, Brushes.Black, 12, 32); // сянка
             e.Graphics.DrawString(infoText, infoFont, Brushes.White, 10, 30); // текст
@@ -154,7 +165,7 @@ namespace AquariumProject
 
                 this.езикToolStripMenuItem.Text = "Език";
             }
-            else
+            else if (lang == "EN")
             {
                 this.Text = "Virtual Aquarium";
 
@@ -175,7 +186,23 @@ namespace AquariumProject
 
                 this.езикToolStripMenuItem.Text = "Language";
             }
-              
+            else if (lang == "ES")
+            {
+                this.Text = "Acuario Virtual";
+                this.файлToolStripMenuItem.Text = "Archivo";
+                this.запишиToolStripMenuItem.Text = "Guardar";
+                this.заредиToolStripMenuItem.Text = "Cargar";
+                this.рибиToolStripMenuItem.Text = "Peces";
+                this.добавиРибкаToolStripMenuItem.Text = "Añadir Pez";
+                this.езикToolStripMenuItem.Text = "Idioma";
+
+                // traducción de menús
+                this.добавиРибкаToolStripMenuItem.DropDownItems[0].Text = "🎲 Aleatorio";
+                string[] esNames = { "Pez 1", "Pez 2", "Pez 3", "Pez 4", "Pez Globo", "Caballito de Mar", "Tiburón", "Pez Espada" };
+                for (int i = 0; i < 8; i++)
+                    this.добавиРибкаToolStripMenuItem.DropDownItems[i + 2].Text = esNames[i];
+            }
+
             // обновява екрана, за да се смени текстът на FPS брояча
             Invalidate();
         }
@@ -263,7 +290,12 @@ namespace AquariumProject
                 {
                     serializer.Serialize(writer, aquariumFish);
                 }
-                MessageBox.Show("Успешно запазване!", "Информация");
+                string msg = "";
+                if (currentLang == "BG") msg = "Успешно запазване!";
+                else if (currentLang == "EN") msg = "Saved successfully!";
+                else msg = "¡Guardado exitosamente!";
+
+                MessageBox.Show(msg);
             }
         }
 
@@ -288,7 +320,12 @@ namespace AquariumProject
 
                     // обновява веднага, за да се видят новите риби
                     Invalidate();
-                    MessageBox.Show("Аквариумът е зареден успешно!");
+
+                    string msg = "";
+                    if (currentLang == "BG") msg = "Аквариумът е зареден успешно!";
+                    else if (currentLang == "EN") msg = "Loaded successfully!";
+                    else msg = "¡Cargado exitosamente!";
+                    MessageBox.Show(msg);
                 }
                 catch (Exception ex)
                 {
@@ -305,6 +342,11 @@ namespace AquariumProject
         private void българскиToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ChangeLanguage("BG");
+        }
+
+        private void испанскиToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ChangeLanguage("ES");
         }
     }
 }

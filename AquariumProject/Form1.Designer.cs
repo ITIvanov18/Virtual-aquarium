@@ -39,6 +39,7 @@
             this.езикToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.българскиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.английскиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.испанскиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -58,7 +59,7 @@
             this.езикToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(800, 33);
+            this.menuStrip1.Size = new System.Drawing.Size(800, 36);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "Рибки";
             // 
@@ -68,7 +69,7 @@
             this.запишиToolStripMenuItem,
             this.заредиToolStripMenuItem});
             this.файлToolStripMenuItem.Name = "файлToolStripMenuItem";
-            this.файлToolStripMenuItem.Size = new System.Drawing.Size(69, 29);
+            this.файлToolStripMenuItem.Size = new System.Drawing.Size(69, 32);
             this.файлToolStripMenuItem.Text = "Файл";
             // 
             // запишиToolStripMenuItem
@@ -90,7 +91,7 @@
             this.рибиToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.добавиРибкаToolStripMenuItem});
             this.рибиToolStripMenuItem.Name = "рибиToolStripMenuItem";
-            this.рибиToolStripMenuItem.Size = new System.Drawing.Size(68, 29);
+            this.рибиToolStripMenuItem.Size = new System.Drawing.Size(68, 32);
             this.рибиToolStripMenuItem.Text = "Риби";
             // 
             // добавиРибкаToolStripMenuItem
@@ -98,15 +99,15 @@
             this.добавиРибкаToolStripMenuItem.Name = "добавиРибкаToolStripMenuItem";
             this.добавиРибкаToolStripMenuItem.Size = new System.Drawing.Size(230, 34);
             this.добавиРибкаToolStripMenuItem.Text = "Добави рибка";
-
             // 
             // езикToolStripMenuItem
             // 
             this.езикToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.българскиToolStripMenuItem,
-            this.английскиToolStripMenuItem});
+            this.английскиToolStripMenuItem,
+            this.испанскиToolStripMenuItem});
             this.езикToolStripMenuItem.Name = "езикToolStripMenuItem";
-            this.езикToolStripMenuItem.Size = new System.Drawing.Size(64, 29);
+            this.езикToolStripMenuItem.Size = new System.Drawing.Size(64, 32);
             this.езикToolStripMenuItem.Text = "Език";
             // 
             // българскиToolStripMenuItem
@@ -122,6 +123,13 @@
             this.английскиToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
             this.английскиToolStripMenuItem.Text = "English";
             this.английскиToolStripMenuItem.Click += new System.EventHandler(this.английскиToolStripMenuItem_Click);
+            // 
+            // испанскиToolStripMenuItem
+            // 
+            this.испанскиToolStripMenuItem.Name = "испанскиToolStripMenuItem";
+            this.испанскиToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
+            this.испанскиToolStripMenuItem.Text = "Español";
+            this.испанскиToolStripMenuItem.Click += new System.EventHandler(this.испанскиToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -151,6 +159,7 @@
         private System.Windows.Forms.ToolStripMenuItem езикToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem българскиToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem английскиToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem испанскиToolStripMenuItem;
     }
 }
 
